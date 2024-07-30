@@ -15,7 +15,7 @@ public class Main {
         k2.setName("Computer Engineer");
         System.out.println(k2.getName());   //name de yanlış değer girmeyiz yani int değer ama Jargona uymamız gerekmektedir.
 
-        
+
 
 
     }
