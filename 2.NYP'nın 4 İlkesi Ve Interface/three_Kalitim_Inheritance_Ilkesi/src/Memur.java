@@ -27,7 +27,7 @@ public class Memur extends Calisan{
     }
 
     public void calis(){
-        System.out.println(getAdSoyad()+" Memur çalışmaya başladı.");
+        System.out.println(getAdSoyad()+" çalışmaya başladı.");
     }
 
 
