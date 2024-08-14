@@ -13,7 +13,7 @@ public class Wepon {
         this.damage = damage;
         this.price = price;
     }
-    public static Wepon[] weapons (){
+    public static Wepon[] weapons (){         //burda bir dizi türünde matot oluşturduk geri bir değer döndürcek dizi şeklinde.
         Wepon [] weponsList=new Wepon[3];
         weponsList[0]=new Wepon("Tabanca",1,2,15);
         weponsList[1]=new Wepon("Kılıç",2,3,35);

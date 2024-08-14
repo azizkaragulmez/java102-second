@@ -5,19 +5,16 @@ public class Player {
     private int health;   //sağlık
 
 
-
     private int money;  //paraa
     private String charName;  //karekter adı
     private String name;  //oyuncu adı
     private Scanner input = new Scanner(System.in);    //bu sınıfta kullanılsın diye priavete tanımladık, başka yerdede kullanırız
-    private Inventory  inventory;   //playerimıza ınvertory atadık
-
-
+    private Inventory inventory;   //playerimıza ınvertory atadık
 
 
     public Player(String name) {   //sadece oyuncu adını dışarıdan alıcağımız için constractora diğerlerini yazmaya gerek yok
         this.name = name;
-        this.inventory=new Inventory();  //otomatik olarak invertory oluşsun dedik silah vs. olmazsa yumruk atsın gibi
+        this.inventory = new Inventory();  //otomatik olarak invertory oluşsun dedik silah vs. olmazsa yumruk atsın gibi
     }
 
 
@@ -26,18 +23,18 @@ public class Player {
         Knight knight = new Knight();
         Archer archer = new Archer();
 
-        GameChar[] charList = {new Samurai(), new Archer(),new Knight()};   //Bu, diziyi başlatır ve üç yeni nesne oluşturur: Samurai, Knight ve Archer.
+        GameChar[] charList = {new Samurai(), new Archer(), new Knight()};   //Bu, diziyi başlatır ve üç yeni nesne oluşturur: Samurai, Knight ve Archer.
         // new Samurai(), new Knight(), ve new Archer() ifadeleri, bu sınıfların her biri için yeni bir nesne oluşturur.//Bu nesneler, sırayla charList dizisine eklenir.
         System.out.println("KARAKTER");
         System.out.println("----------------------------------------------------------------------------------------------------------");
 
         for (GameChar gameChar : charList) {
             System.out.println(
-                    "id :"+gameChar.getId()+
-                    "\tkarakter: " + gameChar.getName() +
-                    "\t Hasar: " + gameChar.getDamage() +
-                    "\t Sağlık:" + gameChar.getHealth() +
-                    "\t para: " + gameChar.getMoney());
+                    "id :" + gameChar.getId() +
+                            "\tkarakter: " + gameChar.getName() +
+                            "\t Hasar: " + gameChar.getDamage() +
+                            "\t Sağlık:" + gameChar.getHealth() +
+                            "\t para: " + gameChar.getMoney());
         }
 
         System.out.println("----------------------------------------------------------------------------------------------------------");
@@ -62,7 +59,7 @@ public class Player {
                 ", Para: "+this.getMoney());*/
     }
 
- public void initPlayer(GameChar gameChar) {
+    public void initPlayer(GameChar gameChar) {
         this.setDamage(gameChar.getDamage());
         this.setHealth(gameChar.getHealth());
         this.setMoney(gameChar.getMoney());
@@ -70,13 +67,14 @@ public class Player {
 
     }
 
-    public void printInfo(){
-        System.out.println("Silahınız: "+this.getInventory().getWepon().getName()+
-                ", Hasarınız: "+this.getDamage()+
-                ", Sağlık :"+this.getHealth()+
-                ", Para: "+this.getMoney());
+    public void printInfo() {
+        System.out.println("Silahınız: " + this.getInventory().getWepon().getName() +
+                ", Zırh :" + this.getInventory().getArmor().getName() +
+                ", Bloklama :" + this.getInventory().getArmor().getBlock() +
+                ", Hasarınız: " + this.getDamage() +
+                ", Sağlık :" + this.getHealth() +
+                ", Para: " + this.getMoney());
     }
-
 
 
     public Inventory getInventory() {
@@ -89,7 +87,7 @@ public class Player {
 
 
     public int getDamage() {
-        return damage+this.getInventory().getWepon().getDamage();
+        return damage + this.getInventory().getWepon().getDamage();
     }
 
     public void setDamage(int damage) {

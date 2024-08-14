@@ -1,3 +1,4 @@
+import java.io.BufferedReader;
 import java.util.Scanner;
 
 public class Game {
@@ -21,12 +22,18 @@ public class Game {
             //bu null atarız başlangıçta sonra bu sonra oyuncunun seçtiği bölgeyi tutacaktır.
             System.out.println("//////////////// Bölgeler ////////////////");
             System.out.println();
+            System.out.println("0- Çıkış Yap --> Oyunu sonlandır.");
             System.out.println("1-Güvenli Ev--> Burası sizin için güvenli bir ev, düşman yoktur.");
             System.out.println("2-Mağaza--> Silah veya zırh satın alabilirsiniz.");
+
             System.out.println("Lütfen gitmek istediğiniz bölgeyi seçiniz :");
             int selectLoc = input.nextInt();     //bu sınıfta Scanner tanımlamıştık.
 
             switch (selectLoc) {
+                case 0:
+                    location=null;
+                    break;
+
                 case 1:
                     location = new SafeHouse(player);     //hangi oyuncuyla çalışmak istiyorsak bilgilerini buraya atıyoruz. gücü canı vs.
                     break;
@@ -37,6 +44,12 @@ public class Game {
 
                 default:
                     location = new SafeHouse(player);
+            }
+
+            if (location==null)
+            {
+                System.out.println("GAME OVER GUYS");
+                break;
             }
             if (!location.onLocation())   //false dönerse ölmüşüz demektir.
             {

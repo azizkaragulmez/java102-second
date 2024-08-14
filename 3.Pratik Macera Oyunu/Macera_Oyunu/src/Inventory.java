@@ -1,9 +1,13 @@
 public class Inventory {
     //ınvetroy=envanter
 
-   Wepon wepon;  //direk nesyeni atmak anlamına gelir
+    Wepon wepon;  //direk nesyeni atmak anlamına gelir
+    Armor armor;
+
+
     public Inventory() {
-        this.wepon=new Wepon("yumruk",0,0,0); //varsayılan olarak yumruk atamış olduk.
+        this.wepon = new Wepon("yumruk", -1, 0, 0); //varsayılan olarak yumruk atamış olduk.
+        this.armor = new Armor(-1, "Paçavra", 0, 0);   //zırh işlemlerinde varsayılan
 
     }
 
@@ -16,4 +20,11 @@ public class Inventory {
     }
 
 
+    public Armor getArmor() {
+        return armor;
+    }
+
+    public void setArmor(Armor armor) {
+        this.armor = armor;
+    }
 }
