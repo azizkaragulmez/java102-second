@@ -25,6 +25,7 @@ public class Game {
             System.out.println("0- Çıkış Yap --> Oyunu sonlandır.");
             System.out.println("1-Güvenli Ev--> Burası sizin için güvenli bir ev, düşman yoktur.");
             System.out.println("2-Mağaza--> Silah veya zırh satın alabilirsiniz.");
+            System.out.println("3-mağara--> Mağraya gir, Dikkat canavar çıkabilir.");
 
             System.out.println("Lütfen gitmek istediğiniz bölgeyi seçiniz :");
             int selectLoc = input.nextInt();     //bu sınıfta Scanner tanımlamıştık.
@@ -41,7 +42,9 @@ public class Game {
                 case 2:
                     location = new ToolStore(player);
                     break;
-
+                case 3:
+                    location=new Cave(player);
+                    break;
                 default:
                     location = new SafeHouse(player);
             }
