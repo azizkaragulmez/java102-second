@@ -24,8 +24,10 @@ public class Game {
             System.out.println();
             System.out.println("0- Çıkış Yap --> Oyunu sonlandır.");
             System.out.println("1-Güvenli Ev--> Burası sizin için güvenli bir ev, düşman yoktur.");
-            System.out.println("2-Mağaza--> Silah veya zırh satın alabilirsiniz.");
-            System.out.println("3-mağara--> Mağraya gir, Dikkat canavar çıkabilir.");
+            System.out.println("2-Eşya Dükkanı--> Silah veya zırh satın alabilirsiniz.");
+            System.out.println("3-mağara--> ödül yemek, Dikkat zombi çıkabilir.");
+            System.out.println("4-orman--> ödül odun, Dikkat vampir çıkabilir.");
+            System.out.println("5-nehir--> ödül su, Dikkat ayı çıkabilir.");
 
             System.out.println("Lütfen gitmek istediğiniz bölgeyi seçiniz :");
             int selectLoc = input.nextInt();     //bu sınıfta Scanner tanımlamıştık.
@@ -45,13 +47,19 @@ public class Game {
                 case 3:
                     location=new Cave(player);
                     break;
+                case 4:
+                    location=new Forest(player);
+                    break;
+                case 5:
+                    location=new River(player);
+                    break;
                 default:
-                    location = new SafeHouse(player);
+                    System.out.println("LÜTFEN GEÇERLİ BİR BÖLGE GİRİNİZ !");
             }
 
             if (location==null)
             {
-                System.out.println("GAME OVER GUYS");
+                System.out.println("Bu Karanlık ve sisli adadan çabuk vazgeçtin !");
                 break;
             }
             if (!location.onLocation())   //false dönerse ölmüşüz demektir.
