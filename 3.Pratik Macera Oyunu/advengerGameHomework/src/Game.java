@@ -40,7 +40,7 @@ public class Game {
                     break;
 
                 case 1:
-                    location = new SafeHouse(player);     //hangi oyuncuyla çalışmak istiyorsak bilgilerini buraya atıyoruz. gücü canı vs.
+                    location = new SafeHouse(player);     
                     break;
 
                 case 2:
