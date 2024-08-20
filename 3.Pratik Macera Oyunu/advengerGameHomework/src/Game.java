@@ -2,9 +2,18 @@ import java.io.BufferedReader;
 import java.util.Scanner;
 
 public class Game {
-
+private int sayma;
 
    private Scanner input =new Scanner(System.in);  //sadece bu sınıf içinde kullanıcağımız için private tanımladık.
+
+    public int getSayma() {
+        return sayma;
+    }
+
+    public void setSayma(int sayma) {
+        this.sayma = sayma;
+    }
+
     public void start() {
         System.out.println("Macera Oyununa Hoşgeldiniz.");
         System.out.print("Lütfen bir isim giriniz : ");
@@ -47,13 +56,22 @@ public class Game {
                     location = new ToolStore(player);
                     break;
                 case 3:
-                    location=new Cave(player);
+
+                       location=new Cave(player);
+
+
+
                     break;
                 case 4:
-                    location=new Forest(player);
+
+                        location=new Forest(player);
+
                     break;
                 case 5:
-                    location=new River(player);
+
+                       location=new River(player);
+
+
                     break;
                 default:
                     System.out.println("LÜTFEN GEÇERLİ BİR BÖLGE GİRİNİZ !");
@@ -75,5 +93,16 @@ public class Game {
 
 
     }
+
+    public int saymaişlemi(int number){
+        number++;
+        setSayma(number);
+        return getSayma();
+    }
+    public boolean deger(){
+
+        return false;
+    }
+
 
 }

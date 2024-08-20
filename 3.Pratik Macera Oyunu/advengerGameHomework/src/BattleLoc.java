@@ -6,13 +6,17 @@ public class BattleLoc extends Location {
     private String award;     //award=ödül
     private int maxObstacle;
 
+    static int number=0;  //ben ekledim
 
     public BattleLoc(Player player, String name, Obstacle obstacle, String award, int maxObstacle) {
         super(player, name);
         this.obstacle = obstacle;
         this.award = award;
         this.maxObstacle = maxObstacle;
+
     }
+
+
 
 
     @Override
@@ -27,6 +31,7 @@ public class BattleLoc extends Location {
         {
 
                 System.out.println(this.getName() + " tüm düşmanları yendiniz !");
+
                 return true;
 
         }
@@ -38,6 +43,15 @@ public class BattleLoc extends Location {
         return true;
     }
 
+
+
+
+
+
+
+
+
+    //SAVAŞMA İŞLEMİNİN OLDUĞU YER BURASI
     public boolean combat(int obsNumber) {
         for (int i = 1; i <= obsNumber; i++) {       //parametre içine obsNumber atma nedeni kaç adet canavarla savaşacağımızı yazıyoruz.
             this.getObstacle().setHealth(this.getObstacle().getOrjinalHealth());
@@ -111,6 +125,7 @@ public class BattleLoc extends Location {
 
 
     }
+
 
     public int randomObstacleNumber() {   //burda ormanda nehirde dağda oluşacak canavalarların sayısını burda üretiyoruz rastgele
         Random r = new Random();

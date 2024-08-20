@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public abstract class Location {
+public abstract class Location  extends Game{
 
     private Player player;      //bu kullanım Player türündeki nesnemizi locationa atmamız gerekiyor.
     private String name;    //lokasyonun ismi
