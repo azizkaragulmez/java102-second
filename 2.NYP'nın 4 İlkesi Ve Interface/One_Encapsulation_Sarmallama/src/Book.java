@@ -2,7 +2,7 @@ public class Book {
     private String name;
     private int pageNumber;
 
-    public Book (String name,int pageNumber)
+    public Book (String name,int pageNumber)   //bir constructor yazdık
     {
         this.name=name;
         this.pageNumber=pageNumber;
@@ -24,8 +24,9 @@ public class Book {
            // this.pageNumber=0;
             System.out.println("- bir değer ile değiştiremezisiniz");  //böyle açıklama da ekleyebiliriz.
         }
-        this.pageNumber=pageNumber;
-
+        else {
+            this.pageNumber = pageNumber;
+        }
     }
 
     public String getName()

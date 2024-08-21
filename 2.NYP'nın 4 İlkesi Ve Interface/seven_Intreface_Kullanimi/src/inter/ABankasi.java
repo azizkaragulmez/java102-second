@@ -31,6 +31,7 @@ public class ABankasi  implements IBanka,IDeneme{
         //Banka ödeme işlemleri
         System.out.println("Bankadan Cevap Bekleniyor !");
         System.out.println("İşlem Başarılı Oldu!");
+        System.out.println(hostIpAdress);
         return true;
     }
 

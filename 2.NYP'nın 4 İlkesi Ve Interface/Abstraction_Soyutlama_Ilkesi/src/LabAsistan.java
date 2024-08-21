@@ -8,7 +8,7 @@ public class LabAsistan extends Asistan{
     public void lablaraGir(){
         System.out.println("laboratuvara girildi...");
     }
-    public void DerseGir(){
-        System.out.println("Derslere girildi...");
+    public void DerseGir(String saat){
+        System.out.println("Derslere girildi...");   //burda yapmak zorunda değiliz override boş bırakabiliriz
     }
 }

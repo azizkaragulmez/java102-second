@@ -37,7 +37,7 @@ public class Main {
             case 2:
                 BBankasi BPos=new BBankasi("B   Bankası","123123","123456");
                 BPos.connect("127.1.1.1");
-                BPos.payment(price,cardNumber,date,cvc);
+                BPos.payment(100,"3242","21 ağustos","233");
                 break;
 
 
