@@ -59,8 +59,9 @@ public class MyList<T> {
         }
         return null;
     }
-
-    public String toString() {  //listelemeye yarar ben yapıtğımda null değerleride çıkıyorud bunda çıktı->[10, 20, 223, 40, 50, 60, 70, 80, 90, 100, 110]
+    
+    //listelemeye yarar ben yapıtğımda null değerleride çıkıyorud bunda çıktı->[10, 20, 223, 40, 50, 60, 70, 80, 90, 100, 110]
+    public String toString() {
         StringBuilder result = new StringBuilder("[");
         for (int i = 0; i < myArray.length; i++) {
             if (myArray[i] != null) {
@@ -72,7 +73,7 @@ public class MyList<T> {
             }
         }
         // Dizinin sonunda boşluk ve virgül var mı kontrol et
-        if (result.length() > 1 && result.substring(result.length() - 2).equals(", ")) { //çok fark etmiyor sonda virgül sorununu çözüyor.
+        if (result.length() > 1 && result.substring(result.length() - 2).equals(", ")) { //It doesn't matter much, it solves the comma problem at the end.
             result.setLength(result.length() - 2);
         }
         result.append("]");

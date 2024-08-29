@@ -5,7 +5,7 @@ public class Main {
     public static void main(String[] args) {
 
 
-     /* 1.ETAP DENEMESİ
+     // 1.ETAP DENEMESİ
         MyList<Integer> liste = new MyList<>();
         System.out.println("Dizideki Eleman Sayısı : " + liste.getSize());
         System.out.println("Dizinin Kapasitesi : "+liste.getCapacity());
@@ -29,11 +29,11 @@ public class Main {
         System.out.println(liste.get(2));
         liste.set(2,223);
         System.out.println(liste.get(2));
-        System.out.println(liste.toString()); */
+        System.out.println(liste.toString());
 
 
-      /* 2.ETAP DENEMESİ
-        MyList<Integer> liste = new MyList<>();
+     // 2.ETAP DENEMESİ
+      //  MyList<Integer> liste = new MyList<>();
         liste.add(10);
         liste.add(20);
         liste.add(30);
@@ -42,12 +42,12 @@ public class Main {
         liste.add(40);
         liste.set(0, 100);
         System.out.print("2. indisteki değer : " + liste.get(2));
-        System.out.println(liste.toString()); */
+        System.out.println(liste.toString());
 
 
 
         // 3.ETAP DENEMESİ
-        MyList<Integer> liste = new MyList<>();
+       // MyList<Integer> liste = new MyList<>();
         System.out.println("Liste Durumu : " + (liste.isEmpty() ? "Boş" : "Dolu"));
         liste.add(10);
         liste.add(20);
