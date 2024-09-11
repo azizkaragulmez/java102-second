@@ -20,5 +20,13 @@ public class Main {
         int i=c.intValue();
         System.out.println(d);
 
+        System.out.println("--------");
+        int abc=12;
+        Integer asd=abc;
+        System.out.println(asd);
+        int p=Integer.parseInt("122");
+        System.out.println(p);
+
+
     }
 }

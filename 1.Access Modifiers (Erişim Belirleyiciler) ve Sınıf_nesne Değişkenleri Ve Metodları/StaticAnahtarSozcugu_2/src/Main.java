@@ -1,5 +1,5 @@
 public class Main {
-    ""
+
     public static void main(String[] args)
     {
 
@@ -26,6 +26,8 @@ public class Main {
         Calculate.calcAvarage(notlar);
        // Mat.calcAvarage(notlar);  //burda code düzen hız eklemek gibi düşünebiliriz yani fazladan nesne kullandık Mat Fizik vs.
                                      //direk görmek için başka class açtım şimdi calculate classı içinde nesne tanımlamakla uğraşcaktım.
+
+
 
 
 

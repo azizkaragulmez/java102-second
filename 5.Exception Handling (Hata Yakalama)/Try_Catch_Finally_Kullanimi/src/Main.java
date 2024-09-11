@@ -5,7 +5,7 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Program başladı");
         Scanner input = new Scanner(System.in);
-        int a = 1;
+        int a = 0;
         int b = 20;
 
 

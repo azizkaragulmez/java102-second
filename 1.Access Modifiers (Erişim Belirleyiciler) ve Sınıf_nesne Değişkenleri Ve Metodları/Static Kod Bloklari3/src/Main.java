@@ -1,20 +1,17 @@
 public class Main {
-    public static void main(String[] args)
-    {
-       /* User u1=new User("Aziz Karagülmez");   //burda bunu gödüğü için o nesneye ait statickleri çalıştırır.
-        User u2=new User("Aziz Karagülmez");   //ikinci bir nesne gördüğünde tekrardan static çalıştırmıyor hafıza almış oluyor zaten
-                                                     //sadece counter artırıyor. (Mantığı  anlaşıldı cümlelere takılma)
-
-        System.out.println(User.counter);*/
-
-
+    public static void main(String[] args) {
+        User u1 = new User("Aziz Karagülmez");   //burda bunu gödüğü için o nesneye ait statickleri çalıştırır.
+        User u2 = new User("Aziz Karagülmez");   //ikinci bir nesne gördüğünde tekrardan static çalıştırmıyor hafıza almış oluyor zaten
+        //sadece counter artırıyor. (Mantığı  anlaşıldı cümlelere takılma)
+        User u3 = new User("Aziz Karagülmez");
+        System.out.println(User.counter);
 
 
         //ÖRNEK CHATGBT ALINDI
         System.out.println("Main metodu başladı.");
 
         // Statik metot çağrısı
-        MyClass.printValues(); // Çıktı: a: 30, b: 40
+        MyClass.printValues(); // Çıktı: a: 30, b: 40     //mantık çağırdığımızda static kod bloğu bir kez çalşıyor demek
 
         // Değerleri değiştir
         MyClass.a = 50;
