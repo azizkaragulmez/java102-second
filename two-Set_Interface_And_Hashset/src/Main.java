@@ -23,7 +23,10 @@ public class Main {
         Iterator<Integer> itr = hSet.iterator();   //bu kullanım gezme işlemine yarıyor yani yukardaki forech gibi
         while (itr.hasNext()){
             System.out.println(itr.next());
+
+
         }
+
 
     }
 }
