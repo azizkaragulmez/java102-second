@@ -11,7 +11,14 @@ public class Book implements Comparable<Book> {
         this.YayinT=YayinT;
     }
 
-
+    public int compareTo(Book other) {
+        // current (this) nesnesinin name alanını, diğer (other) nesnenin name alanı ile karşılaştır.
+        // String.compareTo() metodu, iki String'i karşılaştırır ve aşağıdaki değerleri döner:
+        // - Negatif bir değer: Eğer this.name, other.name'den önce geliyorsa.
+        // - Sıfır: Eğer this.name ve other.name eşitse.
+        // - Pozitif bir değer: Eğer this.name, other.name'den sonra geliyorsa.
+        return this.name.compareTo(other.name);
+    }
 
     public String getName() {
         return name;
@@ -46,7 +53,5 @@ public class Book implements Comparable<Book> {
     }
 
     @Override
-    public int compareTo(Book other) {
-        return this.name.compareTo(other.name);
-    }
+
 }
