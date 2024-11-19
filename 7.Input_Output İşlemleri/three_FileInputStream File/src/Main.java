@@ -12,12 +12,23 @@ public class Main {
             FileInputStream input= new FileInputStream("patika.txt");  //(bu kullanım daha mantıklı okunur kod için
             //neden try içine aldık FileInputStream doğru adres vermezse hata vericeği için
             //System.out.println(input.read());  //P nin  80 e eşit olduğunu söylüyor. Ve bittiğinde en son -1 döndürür
-
+            input.skip(10); //nerdeyse ordan 10 karekter atlar 10 byte atlar.
             int i= input.read();
             while (i != -1){
-                System.out.println(input.read());
+                System.out.print((char)i);
+                i=input.read();  //bu sayede bir sonraki karekteri okuyoruz
             }
-        } catch (Exception e) {
+            input.close(); //diyerekte işi bitince kapatmakta yarar var.
+
+
+
+           /* System.out.println("Kullanılabilir byte sayısı :"+input.available());  //kaçtane karekter olduğunu söyler
+            input.read();
+            input.read(); //read okuyunca onu alıyor ordan siliyor gibi düşünebiliriz.
+            System.out.println("Kullanılabilir byte sayısı :"+input.available());
+        */
+       } catch (Exception e) {
+
             System.out.println(e.getMessage());
         }
     }

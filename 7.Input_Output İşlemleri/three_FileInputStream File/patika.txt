@@ -1,2 +1,2 @@
-Patika.dev ile java 102 öğreniyorum
-Bu bir fileInputStream örneğidir.
+Patika.dev ile java 102 ogreniyorum
+Bu bir fileInputStream ornegidir.
