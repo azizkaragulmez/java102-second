@@ -7,18 +7,19 @@ public class Main {
 
 
 
-        String data ="Aziz Karagülmez";
-        File dosya =new File("patika.txt") ; //farklı bir yol öğrenelim diye yaptık
-                                                      //dosya ekliyebildiğimi görelim şart değil yani bu
+        String data = "Aziz Karagülmez 2";
+        File dosya = new File("patika.txt"); // Dosya nesnesi oluşturuldu
         try {
-            FileWriter filewrt= new FileWriter(dosya, Charset.forName("Big5")); //Charsette ekliyebiliyoruz
-            BufferedWriter wrt=new BufferedWriter(filewrt);
-            wrt.write(data);
-            wrt.close();
+            // FileWriter oluşturulurken aynı dosya ismini kullanın
+            FileWriter filewrt = new FileWriter(dosya, Charset.forName("UTF-8"));
+            // BufferedWriter kullanımı
+            BufferedWriter wrt = new BufferedWriter(filewrt);
+            wrt.write(data); // Veri yazılır
+            wrt.close(); // Kaynak kapatılır
+            System.out.println("Dosya başarıyla yazıldı: " + dosya.getAbsolutePath());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Dosya oluşturulamadı veya yazılamadı", e);
         }
-
 
 
 
