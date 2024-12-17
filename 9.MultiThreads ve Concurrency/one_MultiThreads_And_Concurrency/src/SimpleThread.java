@@ -1,4 +1,5 @@
-public class SimpleThread extends Thread {
+public class SimpleThread
+        extends Thread {
 
     @Override
     public void run() {
