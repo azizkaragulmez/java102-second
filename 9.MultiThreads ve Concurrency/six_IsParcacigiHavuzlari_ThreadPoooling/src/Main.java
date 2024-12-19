@@ -13,7 +13,8 @@ public class Main {
 
         for (int i=0; i<100; i++){
                 pool.execute(or);
-        }
 
+        }
+        pool.shutdown();
     }
 }
