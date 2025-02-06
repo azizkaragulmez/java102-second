@@ -2,6 +2,7 @@ package com.patikadev.Model;
 
 
 import com.patikadev.Helper.DBConnector;
+import com.patikadev.Helper.Helper;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -92,26 +93,62 @@ public class User {
                 obj.setType(rs.getString("type"));
                 userList.add(obj);
             }
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         return userList;
     }
 
-    //Ekle butonu için veri tabanına eklicemiz için bir metod yazıyoruz
-    public static boolean add (String name, String uname, String pass, String type){  //ekle işleminin gerçekleştiyse true döner
-            String query = "INSERT INTO user (name, uname, pass, type) VALUES (?,?,?,?)";
+
+    //Ekle butonu için veri tabanına eklicemiz için bir metod yazıyoruz  //ekleme işlemi burd gerçekleşiyor
+    public static boolean add(String name, String uname, String pass, String type) {  //ekle işleminin gerçekleştiyse true döner
+        String query = "INSERT INTO user (name, uname, pass, type) VALUES (?,?,?,?)";
+        User findUser = User.getFetchByUname(uname);      //Burda Uname aynı olmaması işlemi için eklendi. altıda aynı olmaması için
+        if (findUser != null){   //aktarılan değer null değilse daha önce o kullanıcı adı eklenmiş olduğunu anlıyoruz
+            Helper.showMsg("Bu kullanıcı adı daha önceden eklenmiş. Lütfen farklı bir kullanıcı adı giriniz.");
+            return false;
+        }
         try {
             PreparedStatement pr = DBConnector.getInstance().prepareStatement(query);
-            pr.setString(1,name);
-            pr.setString(2,uname);
-            pr.setString(3,pass);
-            pr.setString(4,type);
-            return pr.executeUpdate() != -1;  //executeUpdate başarılı ise 1 değilse -1 yolluyordu
+            pr.setString(1, name);
+            pr.setString(2, uname);
+            pr.setString(3, pass);
+            pr.setString(4, type);
+            int response  = pr.executeUpdate();
+            if (response == -1){
+                Helper.showMsg("Error");
+            }
+            return response != -1;  //executeUpdate başarılı ise 1 değilse -1 yolluyordu
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
         return true;
+    }
+
+
+
+    //Burda uname aynı olması istemiyoruz
+    public static User getFetchByUname(String uname) {
+        User obj = null;
+        String query = "SELECT * FROM user WHERE uname = ?";
+
+        try {
+            PreparedStatement pr = DBConnector.getInstance().prepareStatement(query);
+            pr.setString(1, uname);  //? olan yere uname parametresi yerleştiriliyor. 1 buradaki ilk ve tek parametreyi temsil ediyor.
+            ResultSet rs = pr.executeQuery();     //executeQuery(), SELECT sorguları için kullanılır ve sorgu sonucu döndürür.
+            if (rs.next()) {
+                obj = new User();
+                obj.setId(rs.getInt("id"));  //ResultSet içindeki kullanıcı bilgileri alınarak User nesnesine atanıyor.
+                obj.setName(rs.getString("name"));
+                obj.setUname(rs.getString("uname"));
+                obj.setPass(rs.getString("pass"));
+                obj.setType(rs.getString("type"));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return obj;    //Eğer kullanıcı bulunduysa, içi dolu bir User nesnesi döndürülüyor. Eğer kullanıcı bulunamazsa, obj hâlâ null olduğu için null döndürülüyor.
     }
 
 
