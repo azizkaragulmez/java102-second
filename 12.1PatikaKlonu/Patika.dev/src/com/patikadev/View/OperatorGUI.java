@@ -6,7 +6,11 @@ import com.patikadev.Model.User;
 
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class OperatorGUI extends JFrame {
 
@@ -24,6 +28,8 @@ public class OperatorGUI extends JFrame {
     private JTextField fld_user_pass;
     private JComboBox cmb_user_type;
     private JButton btn_user_add;
+    private JTextField fld_user_id;
+    private JButton btn_user_delete;
 
     //Altakileri veri tabanında ki verileri GUI ye aktarmak için kullanıcaz
     private DefaultTableModel mdl_user_list; /*DefaultTableModel: Bu, Swing'in JTable bileşeniyle verileri yönetmek için kullanılan
@@ -54,7 +60,13 @@ public class OperatorGUI extends JFrame {
 
 
         //ModelUserList (yukarda oluşturduğumuz defaultModel ve object devamı olarak tablonun sütunlarının adları)
-        mdl_user_list = new DefaultTableModel();
+        mdl_user_list = new DefaultTableModel(){    //normalde bunu metot gibi yazmamıştık ama id diğer sütünlardaki değerei tıklıyarak değiştirilebiliyor o yüzden değiştirilmemesi için özellikle id
+            public boolean isCellEditable(int row, int column){
+                if (column == 0)  //diğerlerin değişmemesinide ayarlıyabiliriz burda sadece 0.sütun seçild
+                    return false;
+                return super.isCellEditable(row,column);
+            }
+        };
         Object[] col_user_list = {"ID", "Ad Soyad", "Kullanıcı Adı", "Şifre", "Üyelik Tipi"};//colon isimlerini atıcaz GUI de ki tabloya
         mdl_user_list.setColumnIdentifiers(col_user_list);  //sütunları bura attık
         row_user_list = new Object[col_user_list.length]; //daha sonra ne kadar ekleniceni sayısını tutuyoruz
@@ -79,6 +91,18 @@ public class OperatorGUI extends JFrame {
         tbl_user_list.getTableHeader().setReorderingAllowed(false);   //burda sütunların kaymasını oynamasını engelledik
 
 
+        //Silme işleminde id yardımıylasiliyorduk ama string değerlerde yazılabiliyor ve bu hataya yol açıyor . Bizde tablodan seçerek tıklıyarak seçmek için model oluşturduk
+        tbl_user_list.getSelectionModel().addListSelectionListener(e -> {   //Bu şu demek seçilen değer üzerinde işlem yapmaya yarayan bir bölüm.(new ListSelectionListener())
+                   try {            //try catch içine almamızda ki neden seçerek yaptığımız silme işleminde seçili kaldığı için refresh edince hata veriyor
+                       String select_user_id = tbl_user_list.getValueAt(tbl_user_list.getSelectedRow(), 0).toString();    //Value et bize seçim yapılan konumu verir yani 0 sütun 1 satır gibi
+                       //tbl_user_list den satırı aldık neere seçildiyse id 0 da olduğu için 0. sütunu aldık ve toString yani object döndürdük
+                       fld_user_id.setText(select_user_id);
+                   }catch (Exception exception){
+
+                   }
+        });
+
+
         //Butona basınca ekleme işlemi yapma
         btn_user_add.addActionListener(e -> {   //lamda şeklinde yaptık
             if (fld_user_name.getText().length() == 0 || fld_user_uname.getText().length() == 0 || fld_user_pass.getText().length() == 0) {  //ekliceğimiz değerler sıfırsa ekleme işlemi yapalım yoksa hata alırız
@@ -95,6 +119,22 @@ public class OperatorGUI extends JFrame {
                     fld_user_name.setText(null); //Burada da ekleme işlemi başarılı ise textfieldların içini boşaltıyoruz.
                     fld_user_uname.setText(null);
                     fld_user_pass.setText(null);
+                }
+            }
+        });
+
+
+        //Silme işlemleri işlemlerinin yapıldığı buton işlemleri
+        btn_user_delete.addActionListener(e -> {
+            if (Helper.isFieldEmpty(fld_user_id)) {   //Butona basılınca kullanıcı id yazdığımız yer boş ise bir mesaj döndürmesini istiyoruz
+                Helper.showMsg("fill");
+            } else {
+                int user_id = Integer.parseInt(fld_user_id.getText());  //Burda bir integer değer dönmesi gerektiği için wrapper sınıflardaki taktiği kullanarak dönüştürdük çünkü textfield String bir değer
+                if (User.delete(user_id)) {
+                    Helper.showMsg("done");
+                    loadUserModel();      //sildikten sonra tabloyu o an güncellemesi için
+                } else {
+                    Helper.showMsg("error");
                 }
             }
         });
