@@ -1,0 +1,192 @@
+package com.patikadev.View;
+
+import com.patikadev.Helper.*;
+import com.patikadev.Model.Operator;
+import com.patikadev.Model.User;
+
+
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class OperatorGUI extends JFrame {
+
+    private JPanel wrapper;
+    private JTabbedPane tab_operator;
+    private JLabel lbl_welcome;
+    private JPanel pnl_top;
+    private JButton btn_logout;
+    private JPanel pnl_user_list;
+    private JScrollPane scrl_user_list;
+    private JTable tbl_user_list;
+    private JPanel pnl_user_form;
+    private JTextField fld_user_name;
+    private JTextField fld_user_uname;
+    private JTextField fld_user_pass;
+    private JComboBox cmb_user_type;
+    private JButton btn_user_add;
+    private JTextField fld_user_id;
+    private JButton btn_user_delete;
+
+    //Altakileri veri tabanında ki verileri GUI ye aktarmak için kullanıcaz
+    private DefaultTableModel mdl_user_list; /*DefaultTableModel: Bu, Swing'in JTable bileşeniyle verileri yönetmek için kullanılan
+                                            bir model sınıfıdır. JTable'de gösterilen veriler, genellikle bir model aracılığıyla
+                                            yönetilir. DefaultTableModel, JTable için verilerin saklanmasını, düzenlenmesini ve
+                                            güncellenmesini sağlayan varsayılan bir sınıftır.*/
+    private Object[] row_user_list;   //veritabanı işlemleri ne atarsa Onject türünde atıcam demek
+    //Object[]: Bu, Java'daki dizi (array) yapısının bir örneğidir. Burada Object[], JTable'e eklenecek bir satırdaki verileri
+    // tutmak için kullanılır. Object tipi, herhangi bir veri türünü tutabilen bir türdür.
+
+
+    private final Operator operator;   //bu ekranı sadece operator işlemi için kullanıcağımız için oluşturuduk
+
+    public OperatorGUI(Operator operator) {  //Bura da operator atmadan buranın çalışmayacağını belirtik
+        this.operator = operator;             //Bura da constroctorını oluşturuduk
+
+
+        add(wrapper);            //JPanel i eklememiz gerekli
+        setSize(1000, 500);  //Büyüklüğü
+        setLocationRelativeTo(null);      //ortada açılması
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);  //çarpı işlemi ile ilgiliydi
+        setTitle(Config.PROJECT_TİTLE);   //Config sınıfı yaptık direk çağırdık direk ordan değiştirerek heryerde değiştirebiliriz.
+        setVisible(true);  //pencerenin görünür olmasını sağlar
+        setResizable(false);  //pencerenin küçülüp büyümesini engeller
+
+
+        lbl_welcome.setText("Hoşgeldin : " + operator.getName());   //Oluşturduğumuz lable ı Textine operator sınıfının ismini atadık
+
+
+        //ModelUserList (yukarda oluşturduğumuz defaultModel ve object devamı olarak tablonun sütunlarının adları)
+        mdl_user_list = new DefaultTableModel() {    //normalde bunu metot gibi yazmamıştık ama id diğer sütünlardaki değerei tıklıyarak değiştirilebiliyor o yüzden değiştirilmemesi için özellikle id
+            public boolean isCellEditable(int row, int column) {
+                if (column == 0)  //diğerlerin değişmemesinide ayarlıyabiliriz burda sadece 0.sütun seçild
+                    return false;
+                return super.isCellEditable(row, column);
+            }
+        };
+        Object[] col_user_list = {"ID", "Ad Soyad", "Kullanıcı Adı", "Şifre", "Üyelik Tipi"};//colon isimlerini atıcaz GUI de ki tabloya
+        mdl_user_list.setColumnIdentifiers(col_user_list);  //sütunları bura attık
+        row_user_list = new Object[col_user_list.length]; //daha sonra ne kadar ekleniceni sayısını tutuyoruz
+        loadUserModel();  //burda çağırdık listeledi tabloda bilgilerin hepsini
+
+
+        //tabloları oluşturduk sütunlarını şimdi içini dolduralım
+        /*Object [] firstRow={"1","Aziz Karagülmez", "krglmz","123","operator"};
+        mdl_user_list.addRow(firstRow);  //addRow metodunu kullanarak eklemiş olduk */
+
+        //yukarda manuel olarak gösterik veritabanından çekerekte ekliyebiliyoruz
+       /* for (User obj : User.getList()) { Bunu burda iptal ettik çünkü  kod düzeni için metoda entegre etik yukarda loadUserModel(); e ekledik
+            Object[] row = new Object[col_user_list.length];  //sütunlarla aynı olması için direk öyle dedik biz veritabanındakileri çekicez
+            row[0] = obj.getId();
+            row[1] = obj.getName();
+            row[2] = obj.getUname();
+            row[3] = obj.getPass();
+            row[4] = obj.getType();
+            mdl_user_list.addRow(row);
+        }*/
+        tbl_user_list.setModel(mdl_user_list);  //attığımız sütunları tablea aktardık
+        tbl_user_list.getTableHeader().setReorderingAllowed(false);   //burda sütunların kaymasını oynamasını engelledik
+
+
+        //Silme işleminde id yardımıylasiliyorduk ama string değerlerde yazılabiliyor ve bu hataya yol açıyor . Bizde tablodan seçerek tıklıyarak seçmek için model oluşturduk
+        tbl_user_list.getSelectionModel().addListSelectionListener(e -> {   //Bu şu demek seçilen değer üzerinde işlem yapmaya yarayan bir bölüm yani listener(dinleyici).(new ListSelectionListener())
+            try {            //try catch içine almamızda ki neden seçerek yaptığımız silme işleminde seçili kaldığı için refresh edince hata veriyor
+                String select_user_id = tbl_user_list.getValueAt(tbl_user_list.getSelectedRow(), 0).toString();    //Value et bize seçim yapılan konumu verir yani 0 sütun 1 satır gibi
+                //tbl_user_list den satırı aldık neere seçildiyse id 0 da olduğu için 0. sütunu aldık ve toString yani object döndürdük
+                fld_user_id.setText(select_user_id);
+            } catch (Exception exception) {
+
+            }
+        });
+
+        //Güncelleme işlemi için, yukarda silme işlemi içinde kullandık bu yöntemi  (veritabanın da güncelleme için)
+        tbl_user_list.getModel().addTableModelListener(e -> {    //new TableModelListener(), bu yukarda olduğu gibi bir listenir (dinleyici)
+            if (e.getType() == TableModelEvent.UPDATE) {
+                int user_id = Integer.parseInt(tbl_user_list.getValueAt(tbl_user_list.getSelectedRow(), 0).toString());  //Integer.parseInt(): Bu metot, bir String değeri int türüne dönüştürür. Yani, alınan user_id'yi String'den int'e çevirir.
+                String user_name = tbl_user_list.getValueAt(tbl_user_list.getSelectedRow() , 1).toString();
+                String user_uname = tbl_user_list.getValueAt(tbl_user_list.getSelectedRow() , 2).toString();
+                String user_pass = tbl_user_list.getValueAt(tbl_user_list.getSelectedRow() , 3).toString();
+                String user_type = tbl_user_list.getValueAt(tbl_user_list.getSelectedRow() , 4).toString();
+                //yukarda ki değerleri biz aldık tıklıyarak ve bu değerleri Usera gönderiyoruz.
+                if (User.update(user_id, user_name, user_uname, user_pass, user_type)){
+                    Helper.showMsg("done");
+                }
+                loadUserModel();   //Bildiğimiz üzere refresh etmesi için yeniden yüklüyor listeleri değişince
+            }
+        });
+
+
+        //Butona basınca ekleme işlemi yapma
+        btn_user_add.addActionListener(e -> {   //lamda şeklinde yaptık
+            if (fld_user_name.getText().length() == 0 || fld_user_uname.getText().length() == 0 || fld_user_pass.getText().length() == 0) {  //ekliceğimiz değerler sıfırsa ekleme işlemi yapalım yoksa hata alırız
+                Helper.showMsg("fill");
+            } else {
+                String name = fld_user_name.getText();
+                String uname = fld_user_uname.getText();
+                String pass = fld_user_pass.getText();
+                String type = cmb_user_type.getSelectedItem().toString(); //Comboboxı bu şekilde okuyabiliyoruz.
+                if (User.add(name, uname, pass, type)) {
+                    Helper.showMsg("done");
+                    loadUserModel();  //Burda da çağırdık çünkü ekeldiğimizde o an liste de gözüksün liste güncellensin diye
+
+                    fld_user_name.setText(null); //Burada da ekleme işlemi başarılı ise textfieldların içini boşaltıyoruz.
+                    fld_user_uname.setText(null);
+                    fld_user_pass.setText(null);
+                }
+            }
+        });
+
+
+        //Silme işlemleri işlemlerinin yapıldığı buton işlemleri
+        btn_user_delete.addActionListener(e -> {
+            if (Helper.isFieldEmpty(fld_user_id)) {   //Butona basılınca kullanıcı id yazdığımız yer boş ise bir mesaj döndürmesini istiyoruz
+                Helper.showMsg("fill");
+            } else {
+                int user_id = Integer.parseInt(fld_user_id.getText());  //Burda bir integer değer dönmesi gerektiği için wrapper sınıflardaki taktiği kullanarak dönüştürdük çünkü textfield String bir değer
+                if (User.delete(user_id)) {
+                    Helper.showMsg("done");
+                    loadUserModel();      //sildikten sonra tabloyu o an güncellemesi için
+                } else {
+                    Helper.showMsg("error");
+                }
+            }
+        });
+    }
+
+
+    //Kod tekrarını  önlemek için ekleme işlemi yapınca liste o an güncellenmediği için biz bura ekledik heryerde kullandık kod düzeni sağladık
+    public void loadUserModel() {
+        //o an güncellemesi için
+        DefaultTableModel clearModel = (DefaultTableModel) tbl_user_list.getModel();  //bir tane clearModel türünde model üretiyoruz
+        clearModel.setRowCount(0);   //bu tablodaki bütün değerleri sıfırlıyor böylelikle aynı şeyleri tekrarlamıyor
+        //Yeniden burda eklememizin sebebi butona bastığımız anda listenin o an güncellenmesi için diğer türlü programı yaptığımızda güncellenmez açıp kapayınca gözükür.
+        for (User obj : User.getList()) {
+            row_user_list[0] = obj.getId();
+            row_user_list[1] = obj.getName();
+            row_user_list[2] = obj.getUname();
+            row_user_list[3] = obj.getPass();
+            row_user_list[4] = obj.getType();
+            mdl_user_list.addRow(row_user_list);
+        }
+    }
+
+    public static void main(String[] args) {
+        Helper.setlayout();  //UI burda çağırabildik kolay ve okunur bir kod şeklinde, try catch iekilde yazarsak GUI de çalıştırabiliriz
+
+        Operator op = new Operator();  //bunlar manuel olarak görelim diye oluşturmuştuk
+        op.setId(1);
+        op.setName("Aziz Karagülmez");
+        op.setPass("1234");
+        op.setType("Operator");
+        op.setUname("krglmz");
+        OperatorGUI opGUI = new OperatorGUI(op);
+
+
+    }
+}
