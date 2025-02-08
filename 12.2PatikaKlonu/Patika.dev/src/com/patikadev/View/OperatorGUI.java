@@ -6,14 +6,11 @@ import com.patikadev.Model.User;
 
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class OperatorGUI extends JFrame {
 
@@ -33,6 +30,10 @@ public class OperatorGUI extends JFrame {
     private JButton btn_user_add;
     private JTextField fld_user_id;
     private JButton btn_user_delete;
+    private JTextField fld_sh_user_name;
+    private JTextField fld_sh_user_uname;
+    private JComboBox cmb_sh_user_type;
+    private JButton btn_user_sh;
 
     //Altakileri veri tabanında ki verileri GUI ye aktarmak için kullanıcaz
     private DefaultTableModel mdl_user_list; /*DefaultTableModel: Bu, Swing'in JTable bileşeniyle verileri yönetmek için kullanılan
@@ -92,6 +93,19 @@ public class OperatorGUI extends JFrame {
         }*/
         tbl_user_list.setModel(mdl_user_list);  //attığımız sütunları tablea aktardık
         tbl_user_list.getTableHeader().setReorderingAllowed(false);   //burda sütunların kaymasını oynamasını engelledik
+
+        for (int i = 0; i < col_user_list.length; i++) {    //sütunalrın oynaklığını kapattım (me)
+            tbl_user_list.getColumnModel().getColumn(i).setResizable(false); // Sütunun genişliğini değiştirmeyi engelle
+            tbl_user_list.getColumnModel().getColumn(i).setPreferredWidth(160); // Sabit genişlik belirle
+        }
+
+
+
+        //tabloların oynalığını kapattım sınırladım (me)
+
+
+
+
 
 
         //Silme işleminde id yardımıylasiliyorduk ama string değerlerde yazılabiliyor ve bu hataya yol açıyor . Bizde tablodan seçerek tıklıyarak seçmek için model oluşturduk
@@ -157,7 +171,40 @@ public class OperatorGUI extends JFrame {
                 }
             }
         });
+
+
+        //Arama yapma işlemi butonu
+        btn_user_sh.addActionListener(e -> {
+                    String name= fld_sh_user_name.getText();
+                    String uname= fld_sh_user_uname.getText();
+                    String type= cmb_sh_user_type.getSelectedItem().toString();   //combobox taki değeri böyle okuyup alabiliyoruz
+                    String query = User.searchQuery(name, uname, type);           //Bunu searchquery göndererek bir query oluşturmuş olduk
+                    loadUserModel(User.searchUserList(query));          //oluşan queryi biz de searchUserListe atmış olduk
+        });
+
+
+        //Çıkış butonu işlemi
+        btn_logout.addActionListener(e -> {
+                dispose();
+        });
     }
+
+    //bizim bir loadUserModelimiz vardı aynısından yaptık ve overloading yaptık ve bir geri liste var ise bunu döndürsün diye BUDA ARAMA İŞLEMİ YUKARDAKİ İÇİN
+    public void loadUserModel(ArrayList<User> list) {
+        //o an güncellemesi için
+        DefaultTableModel clearModel = (DefaultTableModel) tbl_user_list.getModel();  //bir tane clearModel türünde model üretiyoruz
+        clearModel.setRowCount(0);   //bu tablodaki bütün değerleri sıfırlıyor böylelikle aynı şeyleri tekrarlamıyor
+        //Yeniden burda eklememizin sebebi butona bastığımız anda listenin o an güncellenmesi için diğer türlü programı yaptığımızda güncellenmez açıp kapayınca gözükür.
+        for (User obj : list) {    //gönderidiğimiz listeyi aktarmış oluyor tabloya biz oluşan listeyi gönderdik
+            row_user_list[0] = obj.getId();
+            row_user_list[1] = obj.getName();
+            row_user_list[2] = obj.getUname();
+            row_user_list[3] = obj.getPass();
+            row_user_list[4] = obj.getType();
+            mdl_user_list.addRow(row_user_list);
+        }
+    }
+
 
 
     //Kod tekrarını  önlemek için ekleme işlemi yapınca liste o an güncellenmediği için biz bura ekledik heryerde kullandık kod düzeni sağladık

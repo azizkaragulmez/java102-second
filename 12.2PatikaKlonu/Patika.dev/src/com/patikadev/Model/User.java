@@ -191,4 +191,43 @@ public class User {
     }
 
 
+
+    //Arama işlemi için
+    public static ArrayList<User> searchUserList(String query) {  //(yukardaki getListen aldık sadece sorgusu değiştirdik)
+        ArrayList<User> userList = new ArrayList<>(); //Burda bir boş bir ArrayList oluşturduk
+        User obj;
+        try {
+            Statement st = DBConnector.getInstance().createStatement();   //Direk veritabanı bağlantısını yapıyoruz
+            ResultSet rs = st.executeQuery(query);
+            while (rs.next()) {
+                obj = new User();  //User obj = new User(): Burada, User adında bir nesne oluşturuluyor. Bu nesne veritabanından alınan verileri saklamak için kullanılır.
+                obj.setId(rs.getInt("id"));   //rs.getInt("id"): id sütunundaki değeri alır ve bu değeri User nesnesinin setId() metodu ile obj nesnesine atar.
+                obj.setName(rs.getString("name"));
+                obj.setUname(rs.getString("uname"));
+                obj.setPass(rs.getString("pass"));
+                obj.setType(rs.getString("type"));
+                userList.add(obj);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return userList;
+    }
+
+
+    //Bu aramada hepsi dolu olmasada listelesin diye ve dianmik olarak sorgu yaratmak için yazdık yukardaki kod için
+    public  static String searchQuery(String name, String uname, String type){
+            String query = "SELECT * FROM user WHERE uname LIKE '%%{{uname}}%%' AND name LIKE '%%{{name}}%%' ";
+            query= query.replace("{{uname}}",uname);
+            query= query.replace("{{name}}",name);
+            if (!type.isEmpty()) {
+                query += "AND type ='{{type}}'";
+                query = query.replace("{{type}}", type);
+            }
+            return query;
+
+    }
+
+
 }
