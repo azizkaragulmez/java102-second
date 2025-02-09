@@ -2,14 +2,15 @@ package com.patikadev.View;
 
 import com.patikadev.Helper.*;
 import com.patikadev.Model.Operator;
+import com.patikadev.Model.Patika;
 import com.patikadev.Model.User;
 
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.*;
+import java.awt.event.*;
 import java.util.ArrayList;
 
 public class OperatorGUI extends JFrame {
@@ -35,13 +36,25 @@ public class OperatorGUI extends JFrame {
     private JComboBox cmb_sh_user_type;
     private JButton btn_user_sh;
     private JPanel pnl_patika_list;
+    private JScrollPane scrl_patika_list;
+    private JTable tbl_patika_list;
+    private JTextField fld_patika_name;
+    private JButton btn_patika_add;
+
+    private JPopupMenu patikaMenu;  //patika bölümünde sağ tık yapınca açılan bir menü için manuel olarak oluşturduk
+
+
+    private Object[] row_patika_List;   //buna benim bir rowlarımı temsileden Objelerimiz (Patika bölümü için bu da) (gene biz manuel oluşturduk.
+    //Patika için bir model oluşturuyoruz verilerimiz atmak için öğrenmiştik
+    private DefaultTableModel mdl_patika_list;   //bunu kendimiz oluşturuyoruz patika bölümümüz için, kullanıcılar için oluşturduğumuz gibi
+
 
     //Altakileri veri tabanında ki verileri GUI ye aktarmak için kullanıcaz
     private DefaultTableModel mdl_user_list; /*DefaultTableModel: Bu, Swing'in JTable bileşeniyle verileri yönetmek için kullanılan
                                             bir model sınıfıdır. JTable'de gösterilen veriler, genellikle bir model aracılığıyla
                                             yönetilir. DefaultTableModel, JTable için verilerin saklanmasını, düzenlenmesini ve
                                             güncellenmesini sağlayan varsayılan bir sınıftır.*/
-    private Object[] row_user_list;   //veritabanı işlemleri ne atarsa Onject türünde atıcam demek
+    private Object[] row_user_list;   //veritabanı işlemleri ne atarsa Object türünde atıcam demek
     //Object[]: Bu, Java'daki dizi (array) yapısının bir örneğidir. Burada Object[], JTable'e eklenecek bir satırdaki verileri
     // tutmak için kullanılır. Object tipi, herhangi bir veri türünü tutabilen bir türdür.
 
@@ -67,9 +80,9 @@ public class OperatorGUI extends JFrame {
         //ModelUserList (yukarda oluşturduğumuz defaultModel ve object devamı olarak tablonun sütunlarının adları)
         mdl_user_list = new DefaultTableModel() {    //normalde bunu metot gibi yazmamıştık ama id diğer sütünlardaki değerei tıklıyarak değiştirilebiliyor o yüzden değiştirilmemesi için özellikle id
             public boolean isCellEditable(int row, int column) {
-                if (column == 0)  //diğerlerin değişmemesinide ayarlıyabiliriz burda sadece 0.sütun seçild
-                    return false;
-                return super.isCellEditable(row, column);
+                if (column == 0)  //diğerlerin değişmemesinide ayarlıyabiliriz burda sadece 0.sütun seçildi
+                    return false;           //bu 0. sütunun düzenlenebiir olmasını engelliyor ama diğer sütunların düzenlenebilceğini sağlıyor
+                return super.isCellEditable(row, column);  //Eğer 0. sütun dışında bir sütun seçildiyse, super.isCellEditable(row, column); çağrılarak üst sınıftaki varsayılan düzenlenebilirlik davranışı korunuyor.
             }
         };
         Object[] col_user_list = {"ID", "Ad Soyad", "Kullanıcı Adı", "Şifre", "Üyelik Tipi"};//colon isimlerini atıcaz GUI de ki tabloya
@@ -101,14 +114,6 @@ public class OperatorGUI extends JFrame {
         }
 
 
-
-        //tabloların oynalığını kapattım sınırladım (me)
-
-
-
-
-
-
         //Silme işleminde id yardımıylasiliyorduk ama string değerlerde yazılabiliyor ve bu hataya yol açıyor . Bizde tablodan seçerek tıklıyarak seçmek için model oluşturduk
         tbl_user_list.getSelectionModel().addListSelectionListener(e -> {   //Bu şu demek seçilen değer üzerinde işlem yapmaya yarayan bir bölüm yani listener(dinleyici).(new ListSelectionListener())
             try {            //try catch içine almamızda ki neden seçerek yaptığımız silme işleminde seçili kaldığı için refresh edince hata veriyor
@@ -124,17 +129,79 @@ public class OperatorGUI extends JFrame {
         tbl_user_list.getModel().addTableModelListener(e -> {    //new TableModelListener(), bu yukarda olduğu gibi bir listenir (dinleyici)
             if (e.getType() == TableModelEvent.UPDATE) {
                 int user_id = Integer.parseInt(tbl_user_list.getValueAt(tbl_user_list.getSelectedRow(), 0).toString());  //Integer.parseInt(): Bu metot, bir String değeri int türüne dönüştürür. Yani, alınan user_id'yi String'den int'e çevirir.
-                String user_name = tbl_user_list.getValueAt(tbl_user_list.getSelectedRow() , 1).toString();
-                String user_uname = tbl_user_list.getValueAt(tbl_user_list.getSelectedRow() , 2).toString();
-                String user_pass = tbl_user_list.getValueAt(tbl_user_list.getSelectedRow() , 3).toString();
-                String user_type = tbl_user_list.getValueAt(tbl_user_list.getSelectedRow() , 4).toString();
+                String user_name = tbl_user_list.getValueAt(tbl_user_list.getSelectedRow(), 1).toString();
+                String user_uname = tbl_user_list.getValueAt(tbl_user_list.getSelectedRow(), 2).toString();
+                String user_pass = tbl_user_list.getValueAt(tbl_user_list.getSelectedRow(), 3).toString();
+                String user_type = tbl_user_list.getValueAt(tbl_user_list.getSelectedRow(), 4).toString();
                 //yukarda ki değerleri biz aldık tıklıyarak ve bu değerleri Usera gönderiyoruz.
-                if (User.update(user_id, user_name, user_uname, user_pass, user_type)){
+                if (User.update(user_id, user_name, user_uname, user_pass, user_type)) {
                     Helper.showMsg("done");
                 }
                 loadUserModel();   //Bildiğimiz üzere refresh etmesi için yeniden yüklüyor listeleri değişince
             }
         });
+
+        //##ModelUserList
+
+
+        //PatikaList
+        //PATİKA İÇİN YAZICAMIZ BÖLÜM YUKARDA TBL_USER_LİST İŞİMİZ OLMADIĞI İÇİN ONLARIN ALTINA GEÇTİK
+        patikaMenu = new JPopupMenu();  //patikaMenu yukarda tanımladık  //Sağ tıklama menüsünü (JPopupMenu) oluşturur.  //(bu sağa tıklama için yazılan kodlar)
+        JMenuItem updateMenu = new JMenuItem("Güncelle");  //"Güncelle" adlı bir menü öğesi oluşturur.
+        JMenuItem deleteMenu = new JMenuItem("Sil");
+        patikaMenu.add(updateMenu);          // "Güncelle" öğesini menüye ekler.
+        patikaMenu.add(deleteMenu);          // Sağ tıklama ile açılan bir menü (JPopupMenu) oluşturduk ve içine menü öğeleri (JMenuItem) ekledik. (yukardakilerin tamamının açıklaması)
+
+
+        //GUIleri bağlıyoruz
+        updateMenu.addActionListener(new ActionListener() {  //(lambda yapabiliriz diğerlerinde unutmayak diye burda yapmadım)
+            @Override                                        //addActionListener tıklandığnda dinliyoruz. Burada biz bu sayfadan güncelleme sayfasına geçişi burada yapıyoruz önce biz güncelleme yaptık UpdateGuıde çalıştı burda bağlantısını yapıcaz
+            public void actionPerformed(ActionEvent e) {
+                    int select_id =Integer.parseInt(tbl_patika_list.getValueAt(tbl_patika_list.getSelectedRow(),0).toString());     //Seçili satırın ilk sütunundaki (id) değeri alıyoruz. // tbl_patika_list.getSelectedRow() → Kullanıcının seçtiği satırı alır. //tbl_patika_list.getValueAt(row, 0) → Seçili satırın ilk sütunundaki (id) değeri alır.//.toString() → Metin (String) formatına çevirir.//Integer.parseInt(...) → Tam sayı (int) formatına çevirir.
+                    UpdatePatikaGUI updateGUI = new UpdatePatikaGUI(Patika.getFetch(select_id)); //Patika.getFetch(select_id) → Seçilen ID’ye göre veritabanından ilgili "patika" kaydını çeker.  new UpdatePatikaGUI(...) → Güncelleme penceresini oluşturur ve açar.
+                    updateGUI.addWindowListener(new WindowAdapter() {
+                        @Override
+                        public void windowClosed(WindowEvent e) {   //burda da dinliyoruz pencere kapanınca yapılacak işlemi giricez, biz kapanınca güncelle diyoruz
+                            loadPatikaModel();  //sayfayı güncelliyor veritabanından hemen çekiyor
+                        }
+                    });
+            }
+        });
+
+        deleteMenu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (Helper.confirm("sure")){
+                    int select_id =Integer.parseInt(tbl_patika_list.getValueAt(tbl_patika_list.getSelectedRow(),0).toString());
+                    if (Patika.delete(select_id)){
+                        Helper.showMsg("done");
+                        loadPatikaModel();
+                    }else {
+                        Helper.showMsg("error");
+                    }
+                }
+            }
+        });
+
+        mdl_patika_list = new DefaultTableModel();   //sütunları oluşturmak için model oluşturduk
+        Object[] col_patika_list = {"ID", "Patika Adı"};
+        mdl_patika_list.setColumnIdentifiers(col_patika_list);   //tablo başlıklarını atadık
+        row_patika_List = new Object[col_patika_list.length];
+        loadPatikaModel();
+        tbl_patika_list.setModel(mdl_patika_list);   //oluşanı tabela atarak aktarmış oluruz
+        tbl_patika_list.setComponentPopupMenu(patikaMenu);    //Yukarda oluşturduğumuz menuyü setComponenetPopupMenu yardımıyla ekledik
+        tbl_patika_list.getTableHeader().setReorderingAllowed(false);
+        tbl_patika_list.getColumnModel().getColumn(0).setMaxWidth(75);    //biz yaratmadık ama bunlarında bir modeli olduğunu unutma
+
+        tbl_patika_list.addMouseListener(new MouseAdapter() {   //PopMenu için seçilenin sol tıkta sil ve güncelle çıkınca o seçilen satırın mavi olup hangisini seçtiğimizi bilmek istiyoruz
+            @Override
+            public void mousePressed(MouseEvent e) {
+                Point point = e.getPoint();     //Point x ve y tutan kordinatları tutuyor, e.getPointle kordinat değerlerini atıyoruz
+                int selected_row = tbl_patika_list.rowAtPoint(point);    //bizim bir metodumuz rowAtPointimiz var bunun içine pointi atarsak hangi row olduğunu bize söylüyor
+                tbl_patika_list.setRowSelectionInterval(selected_row,selected_row);
+            }
+        });
+        //##PatikaList
 
 
         //Butona basınca ekleme işlemi yapma
@@ -148,7 +215,7 @@ public class OperatorGUI extends JFrame {
                 String type = cmb_user_type.getSelectedItem().toString(); //Comboboxı bu şekilde okuyabiliyoruz.
                 if (User.add(name, uname, pass, type)) {
                     Helper.showMsg("done");
-                    loadUserModel();  //Burda da çağırdık çünkü ekeldiğimizde o an liste de gözüksün liste güncellensin diye
+                    loadUserModel();  //Burda da çağırdık çünkü eklediğimizde o an liste de gözüksün liste güncellensin diye
 
                     fld_user_name.setText(null); //Burada da ekleme işlemi başarılı ise textfieldların içini boşaltıyoruz.
                     fld_user_uname.setText(null);
@@ -163,31 +230,70 @@ public class OperatorGUI extends JFrame {
             if (Helper.isFieldEmpty(fld_user_id)) {   //Butona basılınca kullanıcı id yazdığımız yer boş ise bir mesaj döndürmesini istiyoruz
                 Helper.showMsg("fill");
             } else {
-                int user_id = Integer.parseInt(fld_user_id.getText());  //Burda bir integer değer dönmesi gerektiği için wrapper sınıflardaki taktiği kullanarak dönüştürdük çünkü textfield String bir değer
-                if (User.delete(user_id)) {
-                    Helper.showMsg("done");
-                    loadUserModel();      //sildikten sonra tabloyu o an güncellemesi için
-                } else {
-                    Helper.showMsg("error");
-                }
+               if (Helper.confirm("sure")){   //eminmisin diye sorması için if oluşturduk
+                   int user_id = Integer.parseInt(fld_user_id.getText());  //Burda bir integer değer dönmesi gerektiği için wrapper sınıflardaki taktiği kullanarak dönüştürdük çünkü textfield String bir değer
+                   if (User.delete(user_id)) {
+                       Helper.showMsg("done");
+                       loadUserModel();      //sildikten sonra tabloyu o an güncellemesi için
+                   } else {
+                       Helper.showMsg("error");
+                   }
+               }
             }
         });
 
 
         //Arama yapma işlemi butonu
         btn_user_sh.addActionListener(e -> {
-                    String name= fld_sh_user_name.getText();
-                    String uname= fld_sh_user_uname.getText();
-                    String type= cmb_sh_user_type.getSelectedItem().toString();   //combobox taki değeri böyle okuyup alabiliyoruz
-                    String query = User.searchQuery(name, uname, type);           //Bunu searchquery göndererek bir query oluşturmuş olduk
-                    loadUserModel(User.searchUserList(query));          //oluşan queryi biz de searchUserListe atmış olduk
+            String name = fld_sh_user_name.getText();
+            String uname = fld_sh_user_uname.getText();
+            String type = cmb_sh_user_type.getSelectedItem().toString();   //combobox taki değeri böyle okuyup alabiliyoruz
+            String query = User.searchQuery(name, uname, type);           //Bunu searchquery göndererek bir query oluşturmuş olduk
+            loadUserModel(User.searchUserList(query));          //oluşan queryi biz de searchUserListe atmış olduk
         });
 
 
         //Çıkış butonu işlemi
         btn_logout.addActionListener(e -> {
-                dispose();
+            dispose();
         });
+
+
+        //Patika bölümünde ekle butonu
+        btn_patika_add.addActionListener(e -> {
+            if (Helper.isFieldEmpty(fld_patika_name)) {
+                Helper.showMsg("fill");
+            } else {
+                if (Patika.add(fld_patika_name.getText())) {
+                    Helper.showMsg("done");
+                    loadPatikaModel();
+                    fld_patika_name.setText(null);
+                } else {
+                    Helper.showMsg("error");
+                }
+
+            }
+        });
+
+
+    }
+
+
+    //Kullanıcılar için oluşturduğum şeyi bu kez patika için oluşutruyoruz
+    private void loadPatikaModel() {  //bu metod tabloyu temizleyip geri ona aktarma işlemi  yarıyor diyebiliriz
+        DefaultTableModel clearModel = (DefaultTableModel) tbl_patika_list.getModel();   //tbl_patika_list → Tablonun modelini alıyoruz.DefaultTableModel, JTable'ın içindeki verileri yöneten modeldir.clearModel, bu tablo modeline referans olur.
+        clearModel.setRowCount(0);  //temizle
+        int i = 0;
+        for (Patika obj : Patika.getlist()) {
+            i = 0;
+            row_patika_List[i++] = obj.getId();
+            row_patika_List[i++] = obj.getName();
+            mdl_patika_list.addRow(row_patika_List);
+        }                                                       //Tabloyu (tbl_patika_list) temizler.
+        //Güncel Patika listesini (Patika.getList()) alır.
+        //Yeni verileri tabloya ekler.
+//🔥 Sonuç: loadPatikaModel() her çağrıldığında, tablo güncellenmiş verileri gösterir!
+
     }
 
     //bizim bir loadUserModelimiz vardı aynısından yaptık ve overloading yaptık ve bir geri liste var ise bunu döndürsün diye BUDA ARAMA İŞLEMİ YUKARDAKİ İÇİN
@@ -205,7 +311,6 @@ public class OperatorGUI extends JFrame {
             mdl_user_list.addRow(row_user_list);
         }
     }
-
 
 
     //Kod tekrarını  önlemek için ekleme işlemi yapınca liste o an güncellenmediği için biz bura ekledik heryerde kullandık kod düzeni sağladık
