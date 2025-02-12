@@ -73,4 +73,5 @@ Not: Projeleri çalıştırmak için sisteminizde Java JDK'nın yüklü olması 
 🛠️ Gereksinimler
 Java Development Kit (JDK): Projelerin derlenmesi ve çalıştırılması için gereklidir.
 -----------------------------------------------------------------------------------------------
-![Login windows](https://github.com/azizkaragulmez/java102-second/blob/74b455880afb36e25a73416ae5d46bc1f74c3cc2/1.PNG)
+## Photo
+![image alt](https://github.com/azizkaragulmez/java102-second/blob/74b455880afb36e25a73416ae5d46bc1f74c3cc2/1.PNG)
