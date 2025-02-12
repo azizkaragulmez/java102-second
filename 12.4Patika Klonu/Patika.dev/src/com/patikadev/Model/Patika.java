@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Patika {
     int id;
@@ -98,8 +99,15 @@ public class Patika {
     }
 
 
+    //bu patika siler ama bir yandanda course da kinide siler silinenin otomatik ordan silinmesinide sağlıyor
     public static boolean delete(int id){
         String query = "DELETE FROM patika WHERE id = ?";
+        ArrayList <Course> courseList = Course.getList();  //Course.getList() → Tüm Course nesnelerinin bulunduğu bir ArrayList<Course> döndürülüyor.
+        for (Course obj : courseList){                      //for (Course obj : courseList) → courseList içindeki her Course nesnesi tek tek işleniyor.
+            if (obj.getPatika().getId() == id){             //obj.getPatika() → Course nesnesinin bağlı olduğu Patika nesnesini alır. .getId() == id → Eğer bu Patika'nın id değeri, verilen id ile aynıysa, bu ders (course) silinecek.
+                Course.delete(obj.getId());                 //Course.delete(obj.getId()) → Şart sağlandığında, o Course nesnesi siliniyor.
+            }
+        }
         try {
             PreparedStatement pr = DBConnector.getInstance().prepareStatement(query);
             pr.setInt(1,id);

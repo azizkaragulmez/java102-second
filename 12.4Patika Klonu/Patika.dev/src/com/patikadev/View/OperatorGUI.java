@@ -153,6 +153,8 @@ public class OperatorGUI extends JFrame {
                     Helper.showMsg("done");
                 }
                 loadUserModel();   //Bildiğimiz üzere refresh etmesi için yeniden yüklüyor listeleri değişince
+                loadEducatorCombo(); //buda course için
+                loadCourseModel();   //buda course bölümü için güncellesin diye
             }
         });
 
@@ -180,6 +182,7 @@ public class OperatorGUI extends JFrame {
                     public void windowClosed(WindowEvent e) {   //burda da dinliyoruz pencere kapanınca yapılacak işlemi giricez, biz kapanınca güncelle diyoruz
                         loadPatikaModel();  //sayfayı güncelliyor veritabanından hemen çekiyor
                         loadPatikaCombo();
+                        loadCourseModel();
                     }
                 });
             }
@@ -194,6 +197,7 @@ public class OperatorGUI extends JFrame {
                         Helper.showMsg("done");
                         loadPatikaModel();
                         loadPatikaCombo();   // cursor için oluşturulan otomatik güncellensin diye
+                        loadCourseModel();
                     } else {
                         Helper.showMsg("error");
                     }
@@ -234,7 +238,7 @@ public class OperatorGUI extends JFrame {
                 if (User.add(name, uname, pass, type)) {
                     Helper.showMsg("done");
                     loadUserModel();  //Burda da çağırdık çünkü eklediğimizde o an liste de gözüksün liste güncellensin diye
-
+                    loadEducatorCombo();  //course için ekledik direk comboxta gözüksün diye
                     fld_user_name.setText(null); //Burada da ekleme işlemi başarılı ise textfieldların içini boşaltıyoruz.
                     fld_user_uname.setText(null);
                     fld_user_pass.setText(null);
@@ -248,12 +252,12 @@ public class OperatorGUI extends JFrame {
         Object[] col_courseList = {"ID", "Ders Adı", "Proglamlama Dili", "Patika", "Eğitmen"};   //burda tablo da bulunan sütunların isimlerini belirtiyoruz
         mdl_course_list.setColumnIdentifiers(col_courseList);               //Tüm sütunları sıfırlayıp yenilerini ekler. Baştan tanımlamak ->addColumn() Var olan sütunlara yeni sütun ekler Sonradan sütun eklemek
         row_course_list = new Object[col_courseList.length];               //row=dizi
-        loadCourseList(); //burda veritabanı bağlıyalım
+        loadCourseModel(); //burda veritabanı bağlıyalım
         tbl_course_list.setModel(mdl_course_list);
         tbl_course_list.getColumnModel().getColumn(0).setMaxWidth(75);
         tbl_course_list.getTableHeader().setReorderingAllowed(false);
         loadPatikaCombo();
-
+        loadEducatorCombo();
         //##CoureseList
 
 
@@ -267,6 +271,10 @@ public class OperatorGUI extends JFrame {
                     if (User.delete(user_id)) {
                         Helper.showMsg("done");
                         loadUserModel();      //sildikten sonra tabloyu o an güncellemesi için
+                        loadEducatorCombo();  //course için ekledik otomaitk silsin comboda gözükmesin diye
+                        loadCourseModel();
+                        fld_user_id.setText(null);
+
                     } else {
                         Helper.showMsg("error");
                     }
@@ -309,9 +317,27 @@ public class OperatorGUI extends JFrame {
         });
 
 
+        //Course bölümü için ekleme butonu
+        btn_course_add.addActionListener(e -> {
+            Item patikaItem = (Item) cmb_course_patika.getSelectedItem(); //cmb_course_patika.getSelectedItem() → JComboBox içindeki seçili öğeyi döndürür.Object türündedir ama biz (Item) çevirdik.
+                                                                          //patikaItem → Item türünde bir değişken olup, JComboBox içinden seçilen değeri tutuyor.
+            Item userItem = (Item) cmb_course_user.getSelectedItem();     //aynı işlem iki tane commboxımız olduğu için
+            if (Helper.isFieldEmpty(fld_course_name) || Helper.isFieldEmpty(fld_course_name)){    //Boşmu diye sorguluyoruz
+                Helper.showMsg("fill");
+            }else {
+                if (Course.add(userItem.getKey(),patikaItem.getKey(), fld_course_name.getText(), fld_course_lang.getText())){
+                        Helper.showMsg("done");
+                        loadCourseModel();
+                        fld_course_name.setText(null);
+                        fld_course_lang.setText(null);
+                }else {
+                    Helper.showMsg("error");
+                }
+            }
+        });
     }
 
-    private void loadCourseList() {
+    private void loadCourseModel() {
         DefaultTableModel clearModel = (DefaultTableModel) tbl_course_list.getModel();   //JTable'in modelini alır ve üzerinde işlem yapabilmek için DefaultTableModel türüne dönüştürür.
         clearModel.setRowCount(0);                      // Bu metot, tablodaki satır sayısını belirler. 0 olarak ayarlandığında, tablodaki tüm satırlar silinir ve tablo boş olur.
         int i = 0;
@@ -378,7 +404,7 @@ public class OperatorGUI extends JFrame {
     }
 
 
-    //bunu coursetta combobox için yazıyoruz
+    //bunu coursetta combobox için yazıyoruz, dersler
     public void loadPatikaCombo() {
         cmb_course_patika.removeAllItems();   //burda comboboxın içindekilerin hepsini  siliyoruz,tekrarlanmaması için
         for (Patika obj : Patika.getlist()) {   //Patika.getlist(), veritabanından patika listesini döndüren bir metottur, for döngüsü ile tüm patikalar tek tek gezilir.
@@ -389,7 +415,15 @@ public class OperatorGUI extends JFrame {
     }
 
 
-    //cursor bölümü için 
+    //cursor bölümü için combobox için ama eğitmenler
+    public void loadEducatorCombo(){
+        cmb_course_user.removeAllItems();  //içindeki bütün verileri siliyoruz
+        for (User obj : User.getList()){
+           if (obj.getType().equals("educator")){   //ekleme işlemini educatorsa yapsın diye if koyduk. (direk SQL de yazarakta yapardık ama farketmez fazla)
+                cmb_course_user.addItem(new Item(obj.getId(), obj.getName()));
+           }
+        }
+    }
 
     public static void main(String[] args) {
         Helper.setlayout();  //UI burda çağırabildik kolay ve okunur bir kod şeklinde, try catch iekilde yazarsak GUI de çalıştırabiliriz
