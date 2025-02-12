@@ -60,6 +60,7 @@ Bu depo, [Patika.dev](https://www.patika.dev) platformunda tamamladığım **Jav
     - Açıklama: Patika.dev platformunun temel işlevlerini taklit eden bir uygulama geliştirme projesi.
 
 ![image alt](https://github.com/azizkaragulmez/java102-second/blob/9c7158459dbad0913b3bc0efbc892519a254a639/1.PNG)
+![image alt](https://github.com/azizkaragulmez/java102-second/blob/247874067da4a99b2bc157d63aa7745b637c6a2a/2.PNG)
 ## 🚀 Nasıl Çalıştırılır?
 
 Her bir klasör, bağımsız bir proje veya alıştırma içermektedir. İlgili klasöre giderek projeyi çalıştırabilirsiniz. Örneğin:
