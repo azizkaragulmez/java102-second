@@ -1,3 +1,5 @@
+
+
 # 📘 Java 102 Eğitim Projeleri
 
 Bu depo, [Patika.dev](https://www.patika.dev) platformunda tamamladığım **Java 102** eğitimine ait projeleri ve alıştırmaları içermektedir.
