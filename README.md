@@ -69,4 +69,4 @@ java Main
 
 Not: Projeleri çalıştırmak için sisteminizde Java JDK'nın yüklü olması gerekmektedir.
 🛠️ Gereksinimler
-Java Development Kit (JDK): Projelerin derlenmesi ve çalıştırılması için gereklidir. Buradan indirebilirsiniz.
+Java Development Kit (JDK): Projelerin derlenmesi ve çalıştırılması için gereklidir. 
