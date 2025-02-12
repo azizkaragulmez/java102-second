@@ -59,6 +59,7 @@ Bu depo, [Patika.dev](https://www.patika.dev) platformunda tamamladığım **Jav
       - `12.5Patika Klonu/ Patika.dev`
     - Açıklama: Patika.dev platformunun temel işlevlerini taklit eden bir uygulama geliştirme projesi.
 
+![image alt](https://github.com/azizkaragulmez/java102-second/blob/9c7158459dbad0913b3bc0efbc892519a254a639/1.PNG)
 ## 🚀 Nasıl Çalıştırılır?
 
 Her bir klasör, bağımsız bir proje veya alıştırma içermektedir. İlgili klasöre giderek projeyi çalıştırabilirsiniz. Örneğin:
@@ -73,5 +74,5 @@ Not: Projeleri çalıştırmak için sisteminizde Java JDK'nın yüklü olması 
 Gereksinimler
 Java Development Kit (JDK): Projelerin derlenmesi ve çalıştırılması için gereklidir.
 -----------------------------------------------------------------------------------------------
-## Photo
-![image alt](https://github.com/azizkaragulmez/java102-second/blob/9c7158459dbad0913b3bc0efbc892519a254a639/1.PNG)
+
+
